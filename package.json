@@ -1,0 +1,54 @@
+{
+  "name": "app-001",
+  "version": "0.1.0",
+  "private": true,
+  "author": "rykn0wxx <raurici666@gmail.com>",
+  "scripts": {
+    "serve": "vue-cli-service serve --port 8181 --verbose",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "misc": "node out.js"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "core-js": "^3.6.5",
+    "element-ui": "^2.4.5",
+    "lodash": "^4.17.15",
+    "material-components-web": "^7.0.0",
+    "tailwindcss": "^1.4.6",
+    "vue": "^2.6.11",
+    "vue-axios": "^2.1.5",
+    "vue-meta": "^2.4.0",
+    "vue-router": "^3.2.0",
+    "vuex": "^3.4.0",
+    "vuex-router-sync": "^5.0.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.4.0",
+    "@vue/cli-plugin-eslint": "~4.4.0",
+    "@vue/cli-plugin-router": "~4.4.0",
+    "@vue/cli-plugin-vuex": "~4.4.0",
+    "@vue/cli-service": "~4.4.0",
+    "@vue/eslint-config-standard": "^5.1.2",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "eslint-plugin-vue": "^6.2.2",
+    "fibers": "^5.0.0",
+    "node-sass": "^4.9.2",
+    "raf": "^3.4.1",
+    "sass": "^1.26.5",
+    "sass-loader": "^8.0.2",
+    "vue-cli-plugin-element": "^1.0.1",
+    "vue-cli-plugin-tailwind": "^1.4.1",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "keywords": [
+    "front",
+    "frontend"
+  ],
+  "license": "MIT"
+}

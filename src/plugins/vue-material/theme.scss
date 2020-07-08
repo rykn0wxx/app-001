@@ -1,0 +1,71 @@
+$pri: #4C76BD;
+$sec: #3EB6A6;
+$f1: #d4e3ef;
+$f3: #20232a;
+$s2: #1E1E20;
+$s3: #2D3033;
+$red: #f34a4a;
+@use '../../sass/init';
+@use '@material/theme/functions';
+@use '@material/theme' with (
+  $primary: $pri,
+  $secondary: $sec,
+  $on-primary: $f1,
+  $on-secondary: $f3,
+  $background: $s2,
+  $surface: $s3,
+  $on-surface: $f1,
+  $error: $red,
+  $on-error: $f1,
+  $text-colors: (
+    dark: (
+      primary: rgba($f3, 0.87),
+      secondary: rgba($f3, 0.54),
+      hint: rgba($f3, 0.38),
+      disabled: rgba($f3, 0.38),
+      icon: rgba($f3, 0.38)
+    ),
+    light: (
+      primary: $f1,
+      secondary: rgba($f1, 0.7),
+      hint: rgba($f1, 0.5),
+      disabled: rgba($f1, 0.5),
+      icon: rgba($f1, 0.5)
+    )
+  )
+);
+@use "@material/button/mdc-button";
+@use "@material/card/mdc-card";
+@use "@material/checkbox/mdc-checkbox";
+@use "@material/chips/mdc-chips";
+@use "@material/circular-progress/mdc-circular-progress";
+@use "@material/data-table/mdc-data-table";
+@use "@material/dialog/mdc-dialog";
+@use "@material/drawer/mdc-drawer";
+@use "@material/elevation/mdc-elevation";
+@use "@material/fab/mdc-fab";
+@use "@material/floating-label/mdc-floating-label";
+@use "@material/form-field/mdc-form-field";
+@use "@material/icon-button/mdc-icon-button";
+@use "@material/image-list/mdc-image-list";
+@use "@material/layout-grid/mdc-layout-grid";
+@use "@material/line-ripple/mdc-line-ripple";
+@use "@material/linear-progress/mdc-linear-progress";
+@use "@material/list/mdc-list";
+@use "@material/menu/mdc-menu";
+@use "@material/menu-surface/mdc-menu-surface";
+@use "@material/notched-outline/mdc-notched-outline";
+@use "@material/radio/mdc-radio";
+@use "@material/ripple/mdc-ripple";
+@use "@material/select/mdc-select";
+@use "@material/slider/mdc-slider";
+@use "@material/snackbar/mdc-snackbar";
+@use "@material/switch/mdc-switch";
+@use "@material/tab/mdc-tab";
+@use "@material/tab-bar/mdc-tab-bar";
+@use "@material/tab-indicator/mdc-tab-indicator";
+@use "@material/tab-scroller/mdc-tab-scroller";
+@use "@material/textfield/mdc-text-field";
+@use "@material/theme/mdc-theme";
+@use "@material/top-app-bar/mdc-top-app-bar";
+@use "@material/typography/mdc-typography";

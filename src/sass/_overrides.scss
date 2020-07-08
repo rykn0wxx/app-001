@@ -1,0 +1,218 @@
+* {
+  margin: 0;
+  padding: 0;
+  &, &::before, &::after {
+    box-sizing: border-box;
+  }
+}
+body,html {
+  height: 100%;
+  position: relative;
+}
+body {
+  margin: 0;
+  padding: 0;
+}
+[tabindex="-1"]:focus {
+  outline: none;
+}
+[v\:cloak], [v-cloak], [data-v-cloak], [x-v-cloak], .v-cloak, .x-v-cloak {
+  display: none !important;
+}
+button,input,select,textarea {
+  vertical-align: baseline;
+}
+button,html input[type=button],input[type=reset],input[type=submit] {
+  cursor: pointer;
+  -webkit-appearance: button;
+  &[disabled] {
+    cursor: default;
+  }
+}
+textarea {
+  vertical-align: top;
+  overflow: auto;
+}
+.md-shadow-bottom-z-1 {
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+}
+.md-shadow-bottom-z-2 {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,.4);
+}
+.md-padding {
+  padding: 8px;
+}
+.md-margin {
+  margin: 8px;
+}
+body,html {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-touch-callout: none;
+  min-height: 100%;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+.md-display-4 {
+  font-size: 112px;
+  font-weight: 300;
+  letter-spacing: -.01em;
+  line-height: 112px;
+}
+.md-display-3 {
+  font-size: 56px;
+  font-weight: 400;
+  letter-spacing: -.005em;
+  line-height: 56px;
+}
+.md-display-2 {
+  font-size: 45px;
+  font-weight: 400;
+  line-height: 64px;
+}
+.md-display-1 {
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 40px;
+}
+.md-headline {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 32px;
+}
+.md-caption {
+  font-size: 12px;
+  letter-spacing: .02em;
+}
+.md-btn, button, input[type=button], input[type=reset], input[type=submit] {
+  letter-spacing: .0892857143em;
+}
+button,html,input,select,textarea {
+  font-family: $font-fam;
+}
+button,input,select,textarea {
+  font-size: 100%;
+  border: 0;
+}
+html {
+  font-size: 10px;
+  line-height: 1.4;
+}
+body {
+  font-size: 1.6rem;
+  overflow: hidden;
+  max-width: 100%;
+  max-height: 100%;
+}
+a {
+  text-decoration: none;
+  font-weight: 400;
+  transition: color 0.35s;
+  color: $cyan;
+  &:hover {
+    color: darken($cyan, 10%);
+  }
+}
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+h1 {
+  font-size: 3.400rem;
+  font-weight: 400;
+  line-height: 4rem;
+}
+h2 {
+  font-size: 2.400rem;
+  font-weight: 400;
+  line-height: 3.2rem;
+}
+h3 {
+  font-size: 2.000rem;
+  font-weight: 500;
+  letter-spacing: 0.005em;
+}
+h4 {
+  font-size: 1.600rem;
+  font-weight: 400;
+  letter-spacing: 0.010em;
+  line-height: 2.4rem;
+}
+p {
+  font-size: 1.6rem;
+  font-weight: 400;
+  letter-spacing: 0.010em;
+  line-height: 1.6em;
+  margin: 0.8em 0 1.6em;
+}
+strong {
+  font-weight: 500;
+}
+ul {
+  margin: 0;
+  padding: 0;
+}
+li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.md-title {
+  @include md-title;
+}
+.md-body-1 {
+  @include md-body-1;
+}
+.md-body-2 {
+  @include md-body-2;
+}
+.md-subhead {
+  @include md-subhead;
+}
+.wrapper {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  @media (min-width: 0) and (max-width: $layout-breakpoint-xs) {
+    max-width: 100%;
+  }
+  @media (min-width: $layout-breakpoint-sm) {
+    max-width: $layout-breakpoint-sm;
+  }
+  @media (min-width: $layout-breakpoint-md) {
+    max-width: $layout-breakpoint-md;
+  }
+  @media (min-width: $layout-breakpoint-lg) {
+    max-width: $layout-breakpoint-lg;
+  }
+  @media (min-width: $layout-breakpoint-xl) {
+    max-width: $layout-breakpoint-xl;
+  }
+}
+// .md-card {
+//   &:not(.board) {
+//     width: 100%;
+//     margin: 30px 0;
+//     overflow: unset;
+//     box-shadow: 0 2px 2px 0 rgba($black, 0.2), 0 3px 1px -2px rgba($black, 0.14), 0 1px 5px 0 rgba($black, 0.12);
+//     &-content {
+//       padding: 1.5rem 3rem;
+//       line-height: inherit;
+//     }
+//     &-header {
+//       box-shadow: 0 10px 30px -12px rgba($black, 0.2), 0  4px 25px 0px rgba($black, 0.14), 0  8px 10px -5px rgba($black, 0.12);
+//       margin: -40px  20px 1.5rem;
+//       border-radius: 3px;
+//       padding: 20px 0;
+//     }
+//     &-actions {
+//       margin: 0 20px 10px;
+//       padding: 10px 0 0 0;
+//       border-top: 1px solid rgba(#eee, 0.1);
+//     }
+//   }
+// }
