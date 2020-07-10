@@ -11,6 +11,7 @@ const containerFluid = () => ({ addUtilities }) => {
 }
 
 module.exports = {
+  target: 'relaxed',
   purge: {
     mode: 'all',
     content: ['./public/**/*.html']
@@ -19,9 +20,6 @@ module.exports = {
     extend: {
       letterSpacing: {
         extended: '0.01em'
-      },
-      fontWeight: {
-        inherit: 'inherit'
       }
     },
     colors: {
@@ -163,6 +161,15 @@ module.exports = {
       md: '1.6rem',
       lg: '2.0rem'
     },
+    fontWeight: {
+      inherit: 'inherit',
+      light: '300',
+      norm: '400',
+      med: '500',
+      semi: '600',
+      bold: '700',
+      blk: '900'
+    },
     borderRadius: {
       none: 0,
       default: '0.3rem',
@@ -200,8 +207,33 @@ module.exports = {
       50: '0.5',
       70: '0.7',
       90: '0.9'
+    },
+    lineHeight: {
+      none: 1,
+      tight: '1.25',
+      norm: '1.5',
+      relax: '1.75',
+      loose: 2
     }
   },
   variants: {},
+  corePlugins: {
+    skew: false,
+    gridRowEnd: false,
+    gridRowStart: false,
+    gridRow: false,
+    gridTemplateRows: false,
+    gridColumnEnd: false,
+    gridColumnStart: false,
+    gridColumn: false,
+    gridTemplateColumns: false,
+    borderOpacity: false,
+    divideColor: false,
+    divideOpacity: false,
+    divideWidth: false,
+    flexGrow: false,
+    flexShrink: false,
+    listStyleType: false
+  },
   plugins: [containerFluid()]
 }
