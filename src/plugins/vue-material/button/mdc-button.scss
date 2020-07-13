@@ -1,0 +1,32 @@
+@use "./mixins";
+@include mixins.core-styles;
+@include mixins.theme-baseline;
+
+@mixin trans-prop {
+  transition-property: box-shadow, background-color, opacity, transform;
+  transition-duration: 400ms;
+  transition-timing-function: cubic-bezier(.25,.8,.25,1);
+}
+.mdc-button {
+  cursor: pointer;
+  min-height: 3.6rem;
+  text-align: center;
+  margin: 0.6rem 0.8rem;
+  white-space: nowrap;
+  text-decoration: none;
+  min-width: 8.8rem;
+  line-height: 3.6rem;
+  .mdc-button {
+    @include trans-prop;
+    &--raised {
+      &:hover {
+        box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.26);
+      }
+    }
+    &__ripple {
+      &, &::before, &::after {
+        @include trans-prop;
+      }
+    }
+  }
+}

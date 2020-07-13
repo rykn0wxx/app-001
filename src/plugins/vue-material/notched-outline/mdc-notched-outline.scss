@@ -1,0 +1,5 @@
+@use "../base/mixins" as base-mixins;
+@use "./mixins";
+@include base-mixins.emit-once("mdc-notched-outline") {
+  @include mixins.core-styles;
+}

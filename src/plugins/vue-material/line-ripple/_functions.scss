@@ -1,0 +1,5 @@
+@use "../animation/variables";
+
+@function transition-value($property) {
+  @return #{$property} 180ms variables.$standard-curve-timing-function;
+}

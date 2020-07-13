@@ -12,6 +12,7 @@ module.exports = {
   },
   chainWebpack: config => {
     config.resolve.alias.delete('@')
+    // config.resolve.alias.set('~', path.resolve(__dirname, 'node_modules'))
     config.resolve.alias.set('v~', path.resolve(__dirname, 'src'))
   }
 }

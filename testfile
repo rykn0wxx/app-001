@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# tmpData="$(node node_modules/strip-comments/index 'src/plugins/vue-material/notched-outline/mdc-notched-outline.scss')"
+tmpData=$(node out.js | sed '/^$/d')
+echo $tmpData > src/plugins/vue-material/notched-outline/mdc-notched-outline.scss
