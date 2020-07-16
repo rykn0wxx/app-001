@@ -1,0 +1,149 @@
+@use "sass:map";
+@use "sass:math";
+@use "sass:meta";
+@use "../base/mixins" as base-mixins;
+@use "../feature-targeting/functions" as feature-targeting-functions;
+@use "../feature-targeting/mixins" as feature-targeting-mixins;
+@use "../theme/mixins" as theme-mixins;
+@use "../theme/variables" as theme-variables;
+@use "./functions";
+@use "./variables";
+
+@mixin core-styles($query: feature-targeting-functions.all()) {
+  $feat-animation: feature-targeting-functions.create-target($query, animation);
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+
+  @for $z-value from 0 through 24 {
+    .mdc-elevation--z#{$z-value} {
+      @include elevation($z-value, $query: $query);
+    }
+  }
+  .mdc-elevation-transition {
+    @include feature-targeting-mixins.targets($feat-animation) {
+      transition: functions.transition-value();
+    }
+    @include feature-targeting-mixins.targets($feat-structure) {
+      will-change: variables.$property;
+    }
+  }
+}
+
+@mixin overlay-common($query: feature-targeting-functions.all()) {
+  $feat-animation: feature-targeting-functions.create-target($query, animation);
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+
+  @include overlay-selector_ {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      @include base-mixins.emit-once("mdc-elevation/common/structure") {
+        position: absolute;
+        border-radius: inherit;
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+
+    @include feature-targeting-mixins.targets($feat-animation) {
+      @include base-mixins.emit-once("mdc-elevation/common/animation") {
+        transition: functions.overlay-transition-value();
+      }
+    }
+
+    @include base-mixins.emit-once("mdc-elevation/common/color") {
+      @include overlay-fill-color(variables.$overlay-color, $query: $query);
+    }
+  }
+}
+
+@mixin shadow($box-shadow, $query: feature-targeting-functions.all()) {
+  $feat-color: feature-targeting-functions.create-target($query, color);
+
+  @include feature-targeting-mixins.targets($feat-color) {
+    /* @alternate */
+    box-shadow: $box-shadow;
+  }
+}
+
+@mixin overlay-surface-position($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+
+  @include feature-targeting-mixins.targets($feat-structure) {
+    /* @alternate */
+    position: relative;
+  }
+}
+
+@mixin overlay-dimensions($width, $height: $width, $has-content-sizing: true, $query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+
+  @include overlay-selector_ {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      width: $width;
+      height: $height;
+
+      @if $has-content-sizing {
+        top: 0;
+        /* @noflip */
+        left: 0;
+      } @else {
+        top: 50%;
+        /* @noflip */
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
+}
+
+@mixin overlay-fill-color($color, $query: feature-targeting-functions.all()) {
+  $feat-color: feature-targeting-functions.create-target($query, color);
+
+  @include feature-targeting-mixins.targets($feat-color) {
+    @include theme-mixins.prop(background-color, $color);
+  }
+}
+
+@mixin overlay-opacity($opacity, $query: feature-targeting-functions.all()) {
+  $feat-color: feature-targeting-functions.create-target($query, color);
+
+  @include overlay-selector_ {
+    @include feature-targeting-mixins.targets($feat-color) {
+      opacity: $opacity;
+    }
+  }
+}
+
+@mixin elevation($z-value, $color: variables.$baseline-color, $opacity-boost: 0, $query: feature-targeting-functions.all()) {
+  @if meta.type-of($z-value) != number or not math.is-unitless($z-value) {
+    @error "$z-value must be a unitless number, but received '#{$z-value}'";
+  }
+
+  @if $z-value < 0 or $z-value > 24 {
+    @error "$z-value must be between 0 and 24, but received '#{$z-value}'";
+  }
+
+  $feat-color: feature-targeting-functions.create-target($query, color);
+
+  $color: theme-variables.prop-value($color);
+
+  $umbra-z-value: map.get(variables.$umbra-map, $z-value);
+  $penumbra-z-value: map.get(variables.$penumbra-map, $z-value);
+  $ambient-z-value: map.get(variables.$ambient-map, $z-value);
+
+  $umbra-color: rgba($color, variables.$umbra-opacity + $opacity-boost);
+  $penumbra-color: rgba($color, variables.$penumbra-opacity + $opacity-boost);
+  $ambient-color: rgba($color, variables.$ambient-opacity + $opacity-boost);
+
+  $box-shadow: (
+    #{"#{$umbra-z-value} #{$umbra-color}"},
+    #{"#{$penumbra-z-value} #{$penumbra-color}"},
+    #{$ambient-z-value} $ambient-color,
+  );
+
+  @include shadow($box-shadow, $query: $query);
+}
+
+@mixin overlay-selector_ {
+  .mdc-elevation-overlay {
+    @content;
+  }
+}

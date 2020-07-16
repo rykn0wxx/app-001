@@ -1,0 +1,20 @@
+@use "sass:map";
+@use "../theme/functions";
+@use "../theme/variables" as theme-variables;
+@use "./variables";
+@function states-opacity($color, $state) {
+  $opacity-map: states-opacities_($color);
+  @if not map.has-key($opacity-map, $state) {
+    @error "Invalid state: '#{$state}'. Choose one of: #{map.keys($opacity-map)}";
+  }
+  @return map.get($opacity-map, $state);
+}
+@function states-opacities_($color) {
+  $color-value: theme-variables.prop-value($color);
+  $opacity-map: if(
+    functions.tone($color-value) == "light",
+    variables.$light-ink-opacities,
+    variables.$dark-ink-opacities
+  );
+  @return $opacity-map;
+}

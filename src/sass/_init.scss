@@ -40,9 +40,24 @@ $warn: $orange;
 $dark: #1E1E20;
 $darker: #1A1A1C;
 
-$font-size:   10px;
+$mdc-theme-primary: $active;
+$mdc-theme-accent: $secondary;
+$mdc-theme-secondary: $mdc-theme-accent;
+$mdc-theme-surface: $s3;
+$mdc-theme-background: $s2;
+$mdc-theme-error: $error;
+
+$mdc-theme-on-primary: $f1;
+$mdc-theme-on-secondary: $f2;
+$mdc-theme-on-error: $f2;
+$mdc-theme-on-surface: $f2;
+
+$font-size: 0.625rem;
 @function rem($multiplier) {
   @return $multiplier * $font-size;
+}
+@function dynarem($multiplier) {
+  @return 0.625rem * $multiplier;
 }
 $display-4-font-size-base: rem(11.20);
 $display-3-font-size-base: rem(5.600);
@@ -61,12 +76,9 @@ $layout-breakpoint-md:     768px;
 $layout-breakpoint-lg:     960px;
 $layout-breakpoint-xl:     1024px;
 
-// :root {
-//   --mdc-theme-primary: #{$active};
-//   --mdc-theme-accent: #{$grey};
-//   --mdc-theme-secondary: #{$purple};
-//   --mdc-theme-on-primary: #{$f1};
-// }
+$mdc-shape-small-component-radius: 4px;
+$mdc-shape-medium-component-radius: 4px;
+$mdc-shape-large-component-radius: 0px;
 
 @mixin layout-for-name($name: null) {
   @if $name == null { $name: ''; }

@@ -1,0 +1,6 @@
+@use "sass:color";
+@use "../theme/mixins";
+@use "../theme/variables";
+$action-icon-color: rgba(variables.prop-value(on-surface), variables.text-emphasis(medium)) !default;
+$outline-color: color.mix(variables.prop-value(on-surface), variables.prop-value(surface), 12%) !default;
+$outline-width: 1px !default;

@@ -1,0 +1,21 @@
+@use "sass:list";
+@use "../feature-targeting/functions" as feature-targeting-functions;
+@use "../feature-targeting/mixins" as feature-targeting-mixins;
+@use "@material/rtl/mixins" as rtl-mixins;
+@use "./variables";
+@use "./functions";
+@mixin radius($radius, $rtl-reflexive: false, $query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include feature-targeting-mixins.targets($feat-structure) {
+
+    $needs-flip: $rtl-reflexive and list.length($radius) > 1;
+    @if ($needs-flip) {
+    }
+    border-radius: functions.prop-value($radius);
+    @if ($needs-flip) {
+      @include rtl-mixins.rtl {
+        border-radius: functions.flip-radius(functions.prop-value($radius));
+      }
+    }
+  }
+}

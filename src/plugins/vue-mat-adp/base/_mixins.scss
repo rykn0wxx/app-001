@@ -1,0 +1,11 @@
+@use "sass:list";
+
+$styles-emitted_: () !default;
+
+@mixin emit-once($key) {
+  @if not list.index($styles-emitted_, $key) {
+    $styles-emitted_: list.append($styles-emitted_, $key, comma) !global;
+
+    @content;
+  }
+}

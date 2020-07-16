@@ -1,0 +1,5 @@
+@use "./mixins";
+@use "./helper-text/mdc-text-field-helper-text";
+@use "./character-counter/mdc-text-field-character-counter";
+@use "./icon/mdc-text-field-icon";
+@include mixins.core-styles;

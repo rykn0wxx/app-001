@@ -1,0 +1,1174 @@
+@use "sass:list";
+@use "../density/functions" as density-functions;
+@use "../floating-label/mixins" as floating-label-mixins;
+@use "../floating-label/variables" as floating-label-variables;
+@use "../line-ripple/mixins" as line-ripple-mixins;
+@use "../notched-outline/mixins" as notched-outline-mixins;
+@use "../notched-outline/variables" as notched-outline-variables;
+@use "../ripple/mixins" as ripple-mixins;
+@use "../ripple/functions" as ripple-functions;
+@use "../theme/mixins" as theme-mixins;
+@use "../shape/mixins" as shape-mixins;
+@use "../shape/functions" as shape-functions;
+@use "../feature-targeting/functions" as feature-targeting-functions;
+@use "../feature-targeting/mixins" as feature-targeting-mixins;
+@use "../typography/mixins" as typography-mixins;
+@use "./helper-text/mixins" as helper-text-mixins;
+@use "./character-counter/mixins" as character-counter-mixins;
+@use "./icon/mixins" as icon-mixins;
+@use "./icon/variables" as icon-variables;
+@use "./variables";
+@use "./functions";
+@use "@material/rtl/mixins" as rtl-mixins;
+@mixin core-styles($query: feature-targeting-functions.all()) {
+  @include ripple($query);
+  @include without-ripple($query);
+}
+@mixin without-ripple($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+
+
+  .mdc-text-field {
+    @include _base($query);
+  }
+  .mdc-text-field__input {
+    @include _input($query);
+    @include placeholder-selector_ {
+      @include _input-placeholder($query);
+    }
+
+
+    .mdc-text-field--fullwidth &,
+    .mdc-text-field--no-label &,
+    .mdc-text-field--focused & {
+      @include placeholder-selector_ {
+        @include _input-placeholder-visible($query);
+      }
+    }
+  }
+  .mdc-text-field__affix {
+    @include _affix($query: $query);
+    .mdc-text-field--label-floating &,
+    .mdc-text-field--no-label & {
+      @include _affix-visible($query: $query);
+    }
+  }
+  .mdc-text-field__affix--prefix {
+    @include _prefix($query: $query);
+    .mdc-text-field--end-aligned & {
+      @include _prefix-end-aligned($query: $query);
+    }
+  }
+  .mdc-text-field__affix--suffix {
+    @include _suffix($query: $query);
+    .mdc-text-field--end-aligned & {
+      @include _suffix-end-aligned($query: $query);
+    }
+  }
+
+
+  .mdc-text-field__input:-webkit-autofill + .mdc-floating-label {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      transform: translateY(-50%) scale(.75);
+      cursor: auto;
+    }
+  }
+
+  .mdc-text-field--filled {
+    @include _filled($query);
+    &.mdc-text-field--no-label {
+      @include _filled-no-label($query);
+    }
+  }
+  .mdc-text-field--outlined {
+    @include outlined_($query);
+  }
+
+  .mdc-text-field--textarea {
+    @include textarea_($query);
+  }
+  .mdc-text-field--fullwidth {
+    @include fullwidth_($query);
+  }
+  .mdc-text-field--with-leading-icon {
+    &.mdc-text-field--filled {
+      @include with-leading-icon_($query);
+    }
+    &.mdc-text-field--outlined {
+      @include outlined-with-leading-icon_($query);
+    }
+  }
+  .mdc-text-field--with-trailing-icon {
+    &.mdc-text-field--filled {
+      @include _with-trailing-icon($query);
+    }
+    &.mdc-text-field--outlined {
+      @include _outlined-with-trailing-icon($query);
+    }
+  }
+  .mdc-text-field--with-leading-icon.mdc-text-field--with-trailing-icon {
+    &.mdc-text-field--filled {
+      @include _with-leading-and-trailing-icon($query);
+    }
+  }
+  @include required-label-asterisk_ {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      margin-left: 1px;
+      content: "*";
+    }
+  }
+
+
+  .mdc-text-field-helper-line {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      display: flex;
+      justify-content: space-between;
+      box-sizing: border-box;
+    }
+    .mdc-text-field + & {
+      @include feature-targeting-mixins.targets($feat-structure) {
+        padding-right: variables.$helper-line-padding;
+        padding-left: variables.$helper-line-padding;
+      }
+    }
+  }
+
+
+
+
+  .mdc-form-field > .mdc-text-field + label {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      align-self: flex-start;
+    }
+  }
+
+
+  .mdc-text-field--focused {
+    @include focused_($query);
+  }
+  .mdc-text-field--invalid {
+    @include invalid_($query);
+  }
+  .mdc-text-field--disabled {
+    @include disabled_($query);
+    &.mdc-text-field--filled {
+      @include _disabled-filled($query);
+    }
+  }
+  .mdc-text-field--end-aligned {
+    @include end-aligned_($query);
+  }
+  .mdc-text-field--ltr-text {
+    @include _ltr-text($query);
+    &.mdc-text-field--end-aligned {
+      @include _ltr-text-end-aligned($query);
+    }
+  }
+}
+@mixin ripple($query: feature-targeting-functions.all()) {
+  @include ripple-mixins.common($query);
+  .mdc-text-field--filled {
+    @include ripple-mixins.surface($query: $query, $ripple-target: variables.$ripple-target);
+    @include ripple-mixins.radius-bounded($query: $query, $ripple-target: variables.$ripple-target);
+  }
+  #{variables.$ripple-target} {
+    @include ripple-mixins.target-common($query: $query);
+  }
+}
+@mixin density($density-scale, $minimum-height-for-filled-label: variables.$minimum-height-for-filled-label, $query: feature-targeting-functions.all()) {
+  $height: density-functions.prop-value(
+    $density-config: variables.$density-config,
+    $density-scale: $density-scale,
+    $property-name: height,
+  );
+  @include height($height, $minimum-height-for-filled-label: $minimum-height-for-filled-label, $query: $query);
+
+
+
+
+}
+@mixin outlined-density($density-scale, $query: feature-targeting-functions.all()) {
+  $height: density-functions.prop-value(
+    $density-config: variables.$density-config,
+    $density-scale: $density-scale,
+    $property-name: height,
+  );
+  @include outlined-height($height, $query: $query);
+
+
+
+
+}
+@mixin outlined-with-leading-icon-density($density-scale, $query: feature-targeting-functions.all()) {
+  $height: density-functions.prop-value(
+    $density-config: variables.$density-config,
+    $density-scale: $density-scale,
+    $property-name: height,
+  );
+  @include outlined-with-leading-icon-height($height, $query: $query);
+
+
+
+
+}
+@mixin height(
+  $height,
+  $minimum-height-for-filled-label: variables.$minimum-height-for-filled-label,
+  $query: feature-targeting-functions.all()
+) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include feature-targeting-mixins.targets($feat-structure) {
+    height: $height;
+  }
+  @if $height < $minimum-height-for-filled-label {
+    @include _filled-no-label($query: $query);
+  }
+}
+@mixin outlined-height(
+  $height,
+  $keyframe-suffix: text-field-outlined-#{$height},
+  $query: feature-targeting-functions.all()
+) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  $positionY: variables.get-outlined-label-position-y($height);
+
+  @include notched-outline-mixins.floating-label-float-position-absolute($positionY, $query: $query);
+
+  @include floating-label-mixins.shake-animation($keyframe-suffix, $query: $query);
+  @at-root {
+    @include floating-label-mixins.shake-keyframes($keyframe-suffix, $positionY, $query: $query);
+  }
+  @include feature-targeting-mixins.targets($feat-structure) {
+    height: $height;
+  }
+}
+@mixin outlined-with-leading-icon-height(
+  $height,
+  $keyframe-suffix: null,
+  $query: feature-targeting-functions.all()
+) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+
+
+
+  &.mdc-text-field--outlined {
+    @include _outlined-with-leading-icon-floating-label-position-animation($height, $keyframe-suffix, $query);
+  }
+  @include feature-targeting-mixins.targets($feat-structure) {
+    height: $height;
+  }
+}
+@mixin _outlined-with-leading-icon-floating-label-position-animation(
+  $height,
+  $keyframe-suffix: text-field-outlined-with-leading-icon-#{$height},
+  $query: feature-targeting-functions.all()
+) {
+  $positionY: variables.get-outlined-label-position-y($height);
+
+  @include notched-outline-mixins.floating-label-float-position-absolute(
+    $positionY,
+    variables.$outlined-with-leading-icon-label-position-x,
+    $query: $query
+  );
+
+  @include floating-label-mixins.shake-animation($keyframe-suffix, $query: $query);
+  @at-root {
+    @include floating-label-mixins.shake-keyframes(
+      $keyframe-suffix,
+      $positionY,
+      variables.$outlined-with-leading-icon-label-position-x,
+      $query: $query
+    );
+  }
+  $keyframe-suffix-rtl: #{$keyframe-suffix}-rtl;
+  @include rtl-mixins.rtl {
+    @include floating-label-mixins.shake-animation($keyframe-suffix, $query: $query);
+  }
+  @at-root {
+    @include floating-label-mixins.shake-keyframes(
+      $keyframe-suffix-rtl,
+      $positionY,
+      -(variables.$outlined-with-leading-icon-label-position-x),
+      $query: $query
+    );
+  }
+}
+@mixin shape-radius(
+  $radius,
+  $density-scale: variables.$density-scale,
+  $rtl-reflexive: false,
+  $query: feature-targeting-functions.all()) {
+  @if list.length($radius) > 2 {
+    @error "Invalid radius: '#{$radius}' component doesn't allow customizing all corners";
+  }
+  $height: density-functions.prop-value(
+    $density-config: variables.$density-config,
+    $density-scale: $density-scale,
+    $property-name: height,
+  );
+  $masked-radius: shape-functions.mask-radius($radius, 1 1 0 0);
+  @include shape-mixins.radius(
+    shape-functions.resolve-percentage-radius($height, $masked-radius),
+    $rtl-reflexive,
+    $query: $query
+  );
+}
+@mixin textarea-shape-radius($radius, $rtl-reflexive: false, $query: feature-targeting-functions.all()) {
+  @include notched-outline-mixins.shape-radius($radius, $rtl-reflexive, $query: $query);
+}
+@mixin ink-color($color, $query: feature-targeting-functions.all()) {
+  @include if-enabled_ {
+    @include ink-color_($color, $query: $query);
+  }
+}
+@mixin disabled-ink-color($color, $query: feature-targeting-functions.all()) {
+  @include if-disabled_ {
+    @include ink-color_($color, $query: $query);
+  }
+}
+@mixin placeholder-color($color, $query: feature-targeting-functions.all()) {
+  @include if-enabled_ {
+    @include placeholder-color_($color, $query: $query);
+  }
+}
+@mixin disabled-placeholder-color($color, $query: feature-targeting-functions.all()) {
+  @include if-disabled_ {
+    @include placeholder-color_($color, $query: $query);
+  }
+}
+@mixin fill-color($color, $query: feature-targeting-functions.all()) {
+  @include if-enabled_ {
+    @include fill-color_($color, $query: $query);
+  }
+}
+@mixin disabled-fill-color($color, $query: feature-targeting-functions.all()) {
+  @include if-disabled_ {
+    @include fill-color_($color, $query: $query);
+  }
+}
+@mixin bottom-line-color($color, $query: feature-targeting-functions.all()) {
+  @include if-enabled_ {
+    @include bottom-line-color_($color, $query: $query);
+  }
+}
+@mixin disabled-bottom-line-color($color, $query: feature-targeting-functions.all()) {
+  @include if-disabled_ {
+    @include bottom-line-color_($color, $query: $query);
+  }
+}
+@mixin hover-bottom-line-color($color, $query: feature-targeting-functions.all()) {
+  @include if-enabled_ {
+    @include hover-bottom-line-color_($color, $query: $query);
+  }
+}
+@mixin line-ripple-color($color, $query: feature-targeting-functions.all()) {
+  @include if-enabled_ {
+    @include line-ripple-color_($color, $query: $query);
+  }
+}
+@mixin label-color($color, $query: feature-targeting-functions.all()) {
+  @include if-enabled_ {
+    @include label-ink-color_($color, $query: $query);
+  }
+}
+@mixin disabled-label-color($color, $query: feature-targeting-functions.all()) {
+  @include if-disabled_ {
+    @include label-ink-color_($color, $query: $query);
+  }
+}
+@mixin outline-color($color, $query: feature-targeting-functions.all()) {
+  @include if-enabled_ {
+    @include notched-outline-mixins.color($color, $query: $query);
+  }
+}
+@mixin hover-outline-color($color, $query: feature-targeting-functions.all()) {
+  @include if-enabled_ {
+    @include hover-outline-color_($color, $query: $query);
+  }
+}
+@mixin focused-outline-color($color, $query: feature-targeting-functions.all()) {
+  @include if-enabled_ {
+    @include focused-outline-color_($color, $query: $query);
+  }
+}
+@mixin disabled-outline-color($color, $query: feature-targeting-functions.all()) {
+  @include if-disabled_ {
+    @include notched-outline-mixins.color($color, $query: $query);
+  }
+}
+@mixin caret-color($color, $query: feature-targeting-functions.all()) {
+  $feat-color: feature-targeting-functions.create-target($query, color);
+  .mdc-text-field__input {
+    @include feature-targeting-mixins.targets($feat-color) {
+      @include theme-mixins.prop(caret-color, $color);
+    }
+  }
+}
+@mixin prefix-color($color, $query: feature-targeting-functions.all()) {
+  @include if-enabled_ {
+    @include _prefix-color($color, $query: $query);
+  }
+}
+@mixin disabled-prefix-color($color, $query: feature-targeting-functions.all()) {
+  @include if-disabled_ {
+    @include _prefix-color($color, $query: $query);
+  }
+}
+@mixin suffix-color($color, $query: feature-targeting-functions.all()) {
+  @include if-enabled_ {
+    @include _suffix-color($color, $query: $query);
+  }
+}
+@mixin disabled-suffix-color($color, $query: feature-targeting-functions.all()) {
+  @include if-disabled_ {
+    @include _suffix-color($color, $query: $query);
+  }
+}
+@mixin outline-shape-radius(
+  $radius,
+  $density-scale: variables.$density-scale,
+  $rtl-reflexive: false,
+  $query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  $height: density-functions.prop-value(
+    $density-config: variables.$density-config,
+    $density-scale: $density-scale,
+    $property-name: height,
+  );
+  $resolved-radius: list.nth(shape-functions.resolve-percentage-radius($height, shape-functions.prop-value($radius)), 1);
+  @if (list.length(shape-functions.prop-value($radius)) > 1) {
+
+    @warn "mdc-text-field-outline-shape-radius only supports a single radius; see https://github.com/material-components/material-components-web/issues/4140";
+
+  }
+  .mdc-notched-outline {
+    @include notched-outline-mixins.shape-radius($resolved-radius, $rtl-reflexive, $query: $query);
+  }
+  @if ($resolved-radius > notched-outline-variables.$leading-width) {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      @include rtl-mixins.reflexive-property(padding, $resolved-radius + notched-outline-variables.$padding, 0);
+    }
+    + .mdc-text-field-helper-line {
+      @include feature-targeting-mixins.targets($feat-structure) {
+        @include rtl-mixins.reflexive-property(padding, $resolved-radius + notched-outline-variables.$padding, $resolved-radius);
+      }
+    }
+  }
+}
+@mixin floating-label-float-transition($duration-ms, $timing-function: null, $query: feature-targeting-functions.all()) {
+  .mdc-floating-label {
+    @include floating-label-mixins.float-transition($duration-ms, $timing-function, $query: $query);
+  }
+}
+@mixin _base($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+
+  @include shape-radius(small, $query: $query);
+
+  @include label-color(variables.$label, $query: $query);
+  @include ink-color(variables.$ink-color, $query: $query);
+  @include placeholder-color(variables.$placeholder-ink-color, $query: $query);
+  @include caret-color(primary, $query: $query);
+  @include helper-text-mixins.helper-text-color(variables.$helper-text-color, $query: $query);
+  @include character-counter-mixins.character-counter-color(variables.$helper-text-color, $query: $query);
+  @include icon-mixins.leading-icon-color(variables.$icon-color, $query: $query);
+  @include icon-mixins.trailing-icon-color(variables.$icon-color, $query: $query);
+  @include prefix-color(variables.$affix-color, $query: $query);
+  @include suffix-color(variables.$affix-color, $query: $query);
+
+  @include floating-label_($query);
+
+  @include padding-horizontal_(
+    variables.$padding-horizontal,
+    0,
+    0,
+    $query: $query
+  );
+  @include feature-targeting-mixins.targets($feat-structure) {
+
+
+
+    display: inline-flex;
+    align-items: baseline;
+    position: relative;
+    box-sizing: border-box;
+    overflow: hidden;
+    will-change: opacity, transform, color;
+  }
+}
+@mixin _baseline-center-aligned($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include feature-targeting-mixins.targets($feat-structure) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    .mdc-text-field__input {
+      height: 100%;
+    }
+  }
+}
+@mixin padding-horizontal_(
+  $padding,
+  $left-with-leading-icon,
+  $right-with-trailing-icon,
+  $query: feature-targeting-functions.all()
+) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include feature-targeting-mixins.targets($feat-structure) {
+    padding: 0 $padding;
+    &.mdc-text-field--with-leading-icon {
+      @include rtl-mixins.reflexive-property(
+        padding,
+        $left-with-leading-icon,
+        $padding
+      );
+    }
+    &.mdc-text-field--with-trailing-icon {
+      @include rtl-mixins.reflexive-property(
+        padding,
+        $padding,
+        $right-with-trailing-icon
+      );
+    }
+    &.mdc-text-field--with-leading-icon.mdc-text-field--with-trailing-icon {
+      @include rtl-mixins.reflexive-property(
+        padding,
+        $left-with-leading-icon,
+        $right-with-trailing-icon
+      );
+    }
+  }
+}
+@mixin floating-label_($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  .mdc-floating-label {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+  }
+}
+@mixin _filled($query: feature-targeting-functions.all()) {
+
+  @include ripple-mixins.states-base-color(variables.$ink-color, $query: $query, $ripple-target: variables.$ripple-target);
+  @include ripple-mixins.states-hover-opacity(ripple-functions.states-opacity(variables.$ink-color, hover), $query: $query, $ripple-target: variables.$ripple-target);
+  @include ripple-mixins.states-focus-opacity(ripple-functions.states-opacity(variables.$ink-color, focus), $query: $query, $ripple-target: variables.$ripple-target);
+  @include height(variables.$height, $query: $query);
+  @include typography-mixins.baseline-top(variables.$filled-baseline-top, $query: $query);
+  @include fill-color(variables.$background, $query: $query);
+  @include bottom-line-color(variables.$bottom-line-idle, $query: $query);
+  @include hover-bottom-line-color(variables.$bottom-line-hover, $query: $query);
+  @include line-ripple-color_(primary, $query: $query);
+  @include _filled-floating-label($query);
+}
+@mixin _filled-floating-label($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  .mdc-floating-label {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      @include rtl-mixins.reflexive-position(left, variables.$label-offset);
+    }
+  }
+  @include floating-label-mixins.float-position(variables.$label-position-y, $query: $query);
+}
+@mixin _filled-no-label($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include _baseline-center-aligned($query);
+  @include feature-targeting-mixins.targets($feat-structure) {
+    .mdc-floating-label {
+      display: none;
+    }
+    &::before {
+
+      display: none;
+    }
+  }
+}
+@mixin outlined_($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include outlined-height(
+    $height: variables.$height,
+    $keyframe-suffix: text-field-outlined,
+    $query: $query
+  );
+  @include _baseline-center-aligned($query: $query);
+  @include outline-color(variables.$outlined-idle-border, $query: $query);
+  @include hover-outline-color(variables.$outlined-hover-border, $query: $query);
+  @include focused-outline-color(primary, $query: $query);
+  @include outline-shape-radius(small, $query: $query);
+  @include notched-outline-mixins.notch-offset(notched-outline-variables.$border-width, $query: $query);
+  @include ripple-mixins.states-base-color(transparent, $query: $query, $ripple-target: variables.$ripple-target);
+  @include _outlined-floating-label($query);
+  @include feature-targeting-mixins.targets($feat-structure) {
+    overflow: visible;
+  }
+  .mdc-text-field__input {
+    @include feature-targeting-mixins.targets($feat-structure) {
+
+      display: flex;
+      border: none !important;
+      background-color: transparent;
+      z-index: 1;
+    }
+  }
+  .mdc-text-field__icon {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      z-index: 2;
+    }
+  }
+  &.mdc-text-field--focused {
+    @include notched-outline-mixins.notch-offset(variables.$outlined-stroke-width, $query: $query);
+  }
+}
+@mixin _outlined-floating-label($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  .mdc-floating-label {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      @include rtl-mixins.reflexive-position(left, notched-outline-variables.$padding);
+    }
+  }
+}
+@mixin disabled_($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include ink-color_(variables.$disabled-ink-color, $query: $query);
+  @include placeholder-color_(variables.$disabled-placeholder-ink-color, $query: $query);
+  @include label-ink-color_(variables.$disabled-label-color, $query: $query);
+  @include helper-text-mixins.helper-text-color_(variables.$disabled-helper-text-color, $query: $query);
+  @include character-counter-mixins.character-counter-color_(variables.$disabled-helper-text-color, $query: $query);
+  @include icon-mixins.leading-icon-color_(variables.$disabled-icon, $query: $query);
+  @include icon-mixins.trailing-icon-color_(variables.$disabled-icon, $query: $query);
+  @include _prefix-color(variables.$disabled-affix-color, $query: $query);
+  @include _suffix-color(variables.$disabled-affix-color, $query: $query);
+
+  @include bottom-line-color_(variables.$disabled-border, $query: $query);
+  @include notched-outline-mixins.color(variables.$outlined-disabled-border, $query: $query);
+  @media screen and (-ms-high-contrast: active) {
+    @include placeholder-color_(GrayText, $query: $query);
+    @include label-ink-color_(GrayText, $query: $query);
+    @include helper-text-mixins.helper-text-color_(GrayText, $query: $query);
+    @include character-counter-mixins.character-counter-color_(GrayText, $query: $query);
+    @include icon-mixins.leading-icon-color_(GrayText, $query: $query);
+    @include icon-mixins.trailing-icon-color_(GrayText, $query: $query);
+    @include _prefix-color(GrayText, $query: $query);
+    @include _suffix-color(GrayText, $query: $query);
+
+    @include bottom-line-color_(GrayText, $query: $query);
+    @include notched-outline-mixins.color(GrayText, $query: $query);
+  }
+  @include feature-targeting-mixins.targets($feat-structure) {
+    pointer-events: none;
+  }
+  .mdc-floating-label {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      cursor: default;
+    }
+  }
+}
+@mixin _disabled-filled($query: feature-targeting-functions.all()) {
+  @include fill-color_(variables.$disabled-background, $query: $query);
+}
+@mixin invalid_($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include hover-bottom-line-color(variables.$error, $query: $query);
+  @include line-ripple-color(variables.$error, $query: $query);
+  @include label-color(variables.$error, $query: $query);
+  @include helper-text-mixins.helper-text-validation-color(variables.$error, $query: $query);
+  @include caret-color(variables.$error, $query: $query);
+  @include icon-mixins.trailing-icon-color(variables.$error, $query: $query);
+
+  @include bottom-line-color(variables.$error, $query: $query);
+  @include outline-color(variables.$error, $query: $query);
+  @include hover-outline-color(variables.$error, $query: $query);
+  @include focused-outline-color(variables.$error, $query: $query);
+  + .mdc-text-field-helper-line .mdc-text-field-helper-text--validation-msg {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      opacity: 1;
+    }
+  }
+}
+@mixin focused_($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include label-color(variables.$focused-label-color, $query: $query);
+
+  @include notched-outline-mixins.stroke-width(variables.$outlined-stroke-width, $query: $query);
+  + .mdc-text-field-helper-line .mdc-text-field-helper-text:not(.mdc-text-field-helper-text--validation-msg) {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      opacity: 1;
+    }
+  }
+}
+@mixin with-leading-icon_($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  $icon-padding: icon-variables.$leading-icon-padding-left + icon-variables.$icon-size + icon-variables.$leading-icon-padding-right;
+  .mdc-floating-label {
+    @include _truncate-floating-label-max-width($icon-padding, $query: $query);
+    @include feature-targeting-mixins.targets($feat-structure) {
+      @include rtl-mixins.reflexive-position(left, $icon-padding);
+    }
+  }
+  $truncation: $icon-padding + variables.$padding-horizontal;
+  .mdc-floating-label--float-above {
+    @include _truncate-floating-label-floated-max-width($truncation, $query: $query);
+  }
+}
+@mixin _with-trailing-icon($query: feature-targeting-functions.all()) {
+  $truncation: icon-variables.$trailing-icon-padding-left + icon-variables.$icon-size + icon-variables.$trailing-icon-padding-right + variables.$label-offset;
+  .mdc-floating-label {
+    @include _truncate-floating-label-max-width($truncation, $query: $query);
+  }
+  .mdc-floating-label--float-above {
+    @include _truncate-floating-label-floated-max-width($truncation, $query: $query);
+  }
+}
+@mixin _with-leading-and-trailing-icon($query: feature-targeting-functions.all()) {
+  $leading-icon: icon-variables.$leading-icon-padding-left + icon-variables.$icon-size + icon-variables.$leading-icon-padding-right;
+  $trailing-icon: icon-variables.$trailing-icon-padding-left + icon-variables.$icon-size + icon-variables.$trailing-icon-padding-right;
+  $truncation: $leading-icon + $trailing-icon;
+  .mdc-floating-label {
+    @include _truncate-floating-label-max-width($truncation, $query: $query);
+  }
+  .mdc-floating-label--float-above {
+    @include _truncate-floating-label-floated-max-width($truncation, $query: $query);
+  }
+}
+@mixin outlined-with-leading-icon_($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+
+  $icon-padding: icon-variables.$leading-icon-padding-left + icon-variables.$icon-size + icon-variables.$leading-icon-padding-right;
+  $left-spacing: $icon-padding - notched-outline-variables.$leading-width;
+  .mdc-floating-label {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      @include rtl-mixins.reflexive-position(left, $left-spacing);
+    }
+  }
+
+  $notch-truncation: $icon-padding + notched-outline-variables.$leading-width;
+  @include _truncate-notched-outline-max-width($notch-truncation, $query: $query);
+
+  @include _outlined-with-leading-icon-floating-label-position-animation(
+    $height: variables.$height,
+    $keyframe-suffix: text-field-outlined-leading-icon,
+    $query: $query
+  );
+}
+@mixin _outlined-with-trailing-icon($query: feature-targeting-functions.all()) {
+
+  $icon-padding: icon-variables.$trailing-icon-padding-left + icon-variables.$icon-size + icon-variables.$trailing-icon-padding-right;
+
+  $notch-truncation: $icon-padding + notched-outline-variables.$leading-width;
+  @include _truncate-notched-outline-max-width($notch-truncation, $query: $query);
+}
+@mixin _truncate-notched-outline-max-width($truncation, $query: feature-targeting-functions.all()) {
+  @include notched-outline-mixins.notch-max-width(calc(100% - #{$truncation}), $query: $query);
+}
+@mixin _truncate-floating-label-max-width($truncation, $query: feature-targeting-functions.all()) {
+  @include floating-label-mixins.max-width(calc(100% - #{$truncation}), $query: $query);
+}
+@mixin _truncate-floating-label-floated-max-width($truncation, $query: feature-targeting-functions.all()) {
+  $scale: floating-label-variables.$float-scale;
+  @include floating-label-mixins.max-width(calc(100% / #{$scale} - #{$truncation} / #{$scale}), $query: $query);
+}
+@mixin fullwidth_($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include bottom-line-color(variables.$bottom-line-idle, $query: $query);
+  @include disabled-bottom-line-color(variables.$bottom-line-idle, $query: $query);
+  @include feature-targeting-mixins.targets($feat-structure) {
+    padding: 0;
+    width: 100%;
+  }
+  &:not(.mdc-text-field--textarea) {
+    @include _filled-no-label($query);
+    @include ripple-mixins.states-base-color(transparent, $query: $query, $ripple-target: variables.$ripple-target);
+    @include fill-color(transparent, $query: $query);
+    @include feature-targeting-mixins.targets($feat-structure) {
+      display: flex;
+    }
+  }
+  &.mdc-text-field--textarea .mdc-text-field__input {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      resize: vertical;
+    }
+  }
+}
+@mixin textarea_($query: feature-targeting-functions.all()) {
+
+
+  @include outline-color(variables.$outlined-idle-border, $query: $query);
+  @include hover-outline-color(variables.$outlined-hover-border, $query: $query);
+  @include focused-outline-color(primary, $query: $query);
+  @include outline-shape-radius(small, $query: $query);
+  @include ripple-mixins.states-base-color(transparent, $query: $query, $ripple-target: variables.$ripple-target);
+  @include fill-color(transparent, $query: $query);
+  @include character-counter-mixins.character-counter-position(16px, 13px, $query: $query);
+  @include _textarea-floating-label($query);
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  $feat-animation: feature-targeting-functions.create-target($query, animation);
+  $feat-typography: feature-targeting-functions.create-target($query, typography);
+  @include feature-targeting-mixins.targets($feat-structure) {
+    align-items: center;
+    width: auto;
+    height: auto;
+    padding: 0;
+    overflow: visible;
+  }
+  @include feature-targeting-mixins.targets($feat-structure) {
+    transition: none;
+  }
+  .mdc-text-field__input {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      height: auto;
+      align-self: stretch;
+      box-sizing: border-box;
+
+
+      margin-top: variables.$textarea-input-margin-top;
+
+      margin-bottom: variables.$textarea-input-handle-margin;
+      @include rtl-mixins.reflexive-box(margin, right, variables.$textarea-input-handle-margin);
+
+
+      padding: 0 variables.$padding-horizontal variables.$textarea-input-padding-bottom;
+    }
+    @include feature-targeting-mixins.targets($feat-typography) {
+      line-height: 1.75rem;
+    }
+  }
+  .mdc-text-field-character-counter + .mdc-text-field__input {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      margin-bottom: 28px;
+      padding-bottom: 0;
+    }
+  }
+}
+@mixin _textarea-floating-label($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+
+  .mdc-floating-label {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      @include rtl-mixins.reflexive-position(left, notched-outline-variables.$padding);
+      top: 17px;
+      width: auto;
+    }
+
+    &:not(.mdc-floating-label--float-above) {
+      @include feature-targeting-mixins.targets($feat-structure) {
+        transform: none;
+      }
+    }
+  }
+
+  @include notched-outline-mixins.floating-label-float-position(variables.$textarea-label-position-y, $query: $query);
+
+  @include floating-label-mixins.shake-animation(textarea, $query: $query);
+  @include floating-label-mixins.shake-keyframes(
+    textarea,
+    variables.$textarea-label-position-y,
+    0%,
+    $query: $query
+  );
+}
+@mixin _text($query: feature-targeting-functions.all()) {
+  $feat-animation: feature-targeting-functions.create-target($query, animation);
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+
+  @include typography-mixins.typography(subtitle1, $exclude-props: (line-height), $query: $query);
+  @include feature-targeting-mixins.targets($feat-structure) {
+    height: variables.$input-height;
+  }
+  @include feature-targeting-mixins.targets($feat-animation) {
+    transition: functions.transition(opacity);
+  }
+}
+@mixin _input($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include _text($query: $query);
+  @include feature-targeting-mixins.targets($feat-structure) {
+    width: 100%;
+    min-width: 0;
+    border: none;
+    border-radius: 0;
+    background: none;
+    appearance: none;
+    padding: 0;
+
+    &::-ms-clear {
+      display: none;
+    }
+    &:focus {
+      outline: none;
+    }
+
+    &:invalid {
+      box-shadow: none;
+    }
+
+    &:-webkit-autofill {
+      z-index: auto !important;
+    }
+  }
+}
+@mixin _input-placeholder($query: feature-targeting-functions.all()) {
+  $feat-animation: feature-targeting-functions.create-target($query, animation);
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include feature-targeting-mixins.targets($feat-animation) {
+    transition: functions.transition(opacity, $duration: 67ms);
+  }
+  @include feature-targeting-mixins.targets($feat-structure) {
+    opacity: 0;
+  }
+}
+@mixin _input-placeholder-visible($query: feature-targeting-functions.all()) {
+  $feat-animation: feature-targeting-functions.create-target($query, animation);
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include feature-targeting-mixins.targets($feat-animation) {
+    transition-delay: 40ms;
+    transition-duration: 110ms;
+  }
+  @include feature-targeting-mixins.targets($feat-structure) {
+    opacity: 1;
+  }
+}
+@mixin _affix($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include _text($query: $query);
+  @include feature-targeting-mixins.targets($feat-structure) {
+    opacity: 0;
+    white-space: nowrap;
+  }
+}
+@mixin _affix-visible($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include feature-targeting-mixins.targets($feat-structure) {
+    opacity: 1;
+  }
+}
+@mixin _prefix($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include feature-targeting-mixins.targets($feat-structure) {
+    @include rtl-mixins.reflexive-box(padding, right, variables.$prefix-padding);
+  }
+}
+@mixin _prefix-end-aligned($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include feature-targeting-mixins.targets($feat-structure) {
+    @include rtl-mixins.reflexive-box(padding, right, variables.$prefix-end-aligned-padding);
+  }
+}
+@mixin _suffix($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include feature-targeting-mixins.targets($feat-structure) {
+    @include rtl-mixins.reflexive-box(padding, left, variables.$suffix-padding);
+  }
+}
+@mixin _suffix-end-aligned($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include feature-targeting-mixins.targets($feat-structure) {
+    @include rtl-mixins.reflexive-box(padding, left, variables.$suffix-end-aligned-padding);
+  }
+}
+@mixin end-aligned_($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  .mdc-text-field__input {
+    @include feature-targeting-mixins.targets($feat-structure) {
+
+      text-align: right;
+    }
+    @include rtl-mixins.rtl {
+      @include feature-targeting-mixins.targets($feat-structure) {
+        text-align: left;
+      }
+    }
+  }
+}
+@mixin _ltr-text($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include feature-targeting-mixins.targets($feat-structure) {
+    @include rtl-mixins.rtl {
+      .mdc-text-field__input,
+      .mdc-text-field__affix {
+        direction: ltr;
+      }
+      .mdc-text-field__affix--prefix {
+        padding-left: 0;
+        padding-right: variables.$prefix-padding;
+      }
+      .mdc-text-field__affix--suffix {
+        padding-left: variables.$suffix-padding;
+        padding-right: 0;
+      }
+
+
+      .mdc-text-field__icon--leading {
+        order: 1;
+      }
+      .mdc-text-field__affix--suffix {
+        order: 2;
+      }
+      .mdc-text-field__input {
+        order: 3;
+      }
+      .mdc-text-field__affix--prefix {
+        order: 4;
+      }
+      .mdc-text-field__icon--trailing {
+        order: 5;
+      }
+    }
+  }
+}
+@mixin _ltr-text-end-aligned($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include feature-targeting-mixins.targets($feat-structure) {
+    @include rtl-mixins.rtl {
+      .mdc-text-field__input {
+
+
+        text-align: right;
+      }
+      .mdc-text-field__affix--prefix {
+
+        padding-right: variables.$prefix-end-aligned-padding;
+      }
+      .mdc-text-field__affix--suffix {
+        padding-left: variables.$suffix-end-aligned-padding;
+
+      }
+    }
+  }
+}
+@mixin ink-color_($color, $query: feature-targeting-functions.all()) {
+  $feat-color: feature-targeting-functions.create-target($query, color);
+  .mdc-text-field__input {
+    @include feature-targeting-mixins.targets($feat-color) {
+      @include theme-mixins.prop(color, $color);
+    }
+  }
+}
+@mixin placeholder-color_($color, $query: feature-targeting-functions.all()) {
+  $feat-color: feature-targeting-functions.create-target($query, color);
+  @include feature-targeting-mixins.targets($feat-color) {
+    .mdc-text-field__input {
+      @include placeholder-selector_ {
+        @include theme-mixins.prop(color, $color);
+      }
+    }
+  }
+}
+@mixin fill-color_($color, $query: feature-targeting-functions.all(), $addAlternate: false) {
+  $feat-color: feature-targeting-functions.create-target($query, color);
+  @include feature-targeting-mixins.targets($feat-color) {
+    @if ($addAlternate) {
+    }
+    @include theme-mixins.prop(background-color, $color);
+  }
+}
+@mixin bottom-line-color_($color, $query: feature-targeting-functions.all()) {
+  .mdc-line-ripple {
+    @include line-ripple-mixins.inactive-color($color, $query: $query);
+  }
+}
+@mixin hover-bottom-line-color_($color, $query: feature-targeting-functions.all()) {
+  $feat-color: feature-targeting-functions.create-target($query, color);
+  &:hover .mdc-line-ripple {
+    @include line-ripple-mixins.inactive-color($color, $query: $query);
+  }
+}
+@mixin line-ripple-color_($color, $query: feature-targeting-functions.all()) {
+  .mdc-line-ripple {
+    @include line-ripple-mixins.active-color($color, $query: $query);
+  }
+}
+@mixin hover-outline-color_($color, $query: feature-targeting-functions.all()) {
+  &:not(.mdc-text-field--focused):hover {
+    .mdc-notched-outline {
+      @include notched-outline-mixins.color($color, $query: $query);
+    }
+  }
+}
+@mixin focused-outline-color_($color, $query: feature-targeting-functions.all()) {
+  &.mdc-text-field--focused {
+    @include notched-outline-mixins.color($color, $query: $query);
+  }
+}
+@mixin label-ink-color_($color, $query: feature-targeting-functions.all()) {
+  .mdc-floating-label {
+    @include floating-label-mixins.ink-color($color, $query: $query);
+  }
+}
+@mixin _prefix-color($color, $query: feature-targeting-functions.all()) {
+  $feat-color: feature-targeting-functions.create-target($query, color);
+  @include feature-targeting-mixins.targets($feat-color) {
+    .mdc-text-field__affix--prefix {
+      @include theme-mixins.prop(color, $color);
+    }
+  }
+}
+@mixin _suffix-color($color, $query: feature-targeting-functions.all()) {
+  $feat-color: feature-targeting-functions.create-target($query, color);
+  @include feature-targeting-mixins.targets($feat-color) {
+    .mdc-text-field__affix--suffix {
+      @include theme-mixins.prop(color, $color);
+    }
+  }
+}
+@mixin required-label-asterisk_() {
+  .mdc-text-field__input:required ~ {
+    .mdc-floating-label::after,
+    .mdc-notched-outline .mdc-floating-label::after {
+      @content;
+    }
+  }
+}
+@mixin placeholder-selector_ {
+
+
+
+
+
+
+  @media all {
+
+
+    &::placeholder {
+      @content;
+    }
+  }
+  @media all {
+
+
+    &:-ms-input-placeholder {
+      @content;
+    }
+  }
+}
+@mixin if-enabled_ {
+  &:not(.mdc-text-field--disabled) {
+    @content;
+  }
+}
+@mixin if-disabled_ {
+  &.mdc-text-field--disabled {
+    @content;
+  }
+}

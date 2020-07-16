@@ -6,11 +6,11 @@
 import Vue from 'vue'
 
 // Application plugins
-import 'v~/plugins/vue-material/theme.scss'
+import 'v~/plugins/vue-mat-adp/theme.scss'
 import { securedAxios, plainAxios } from 'v~/plugins/vue-axios/axios'
 import VueMeta from 'v~/plugins/vue-meta/meta'
 import VueElement from 'v~/plugins/vue-element/element'
-// import VueMaterial from 'v~/plugins/vue-material/material'
+import VueMatAdp from 'v~/plugins/vue-mat-adp'
 import VueMedia from 'v~/plugins/vue-media/media'
 import OutClick from 'v~/directives/out-click'
 import { sync } from 'vuex-router-sync'
@@ -27,7 +27,7 @@ Vue.config.productionTip = false
 Vue.use(OutClick)
 Vue.use(VueMeta)
 Vue.use(VueElement)
-// Vue.use(VueMaterial)
+Vue.use(VueMatAdp)
 Vue.use(VueMedia)
 sync(store, router)
 

@@ -1,0 +1,61 @@
+@use "../functions";
+@use "../../theme/mixins";
+@use "../../typography/mixins" as typography-mixins;
+@use "../../feature-targeting/functions" as feature-targeting-functions;
+@use "../../feature-targeting/mixins" as feature-targeting-mixins;
+@mixin helper-text-core-styles($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  $feat-animation: feature-targeting-functions.create-target($query, animation);
+  .mdc-text-field-helper-text {
+    @include typography-mixins.typography(caption, $query: $query);
+    @include typography-mixins.text-baseline($top: 16px, $query: $query);
+    @include feature-targeting-mixins.targets($feat-structure) {
+      margin: 0;
+      opacity: 0;
+      will-change: opacity;
+    }
+    @include feature-targeting-mixins.targets($feat-animation) {
+      transition: functions.transition(opacity);
+    }
+  }
+  .mdc-text-field-helper-text--persistent {
+    @include feature-targeting-mixins.targets($feat-animation) {
+      transition: none;
+    }
+    @include feature-targeting-mixins.targets($feat-structure) {
+      opacity: 1;
+      will-change: initial;
+    }
+  }
+}
+@mixin helper-text-color($color, $query: feature-targeting-functions.all()) {
+  &:not(.mdc-text-field--disabled) {
+    @include helper-text-color_($color, $query);
+  }
+}
+@mixin disabled-helper-text-color($color, $query: feature-targeting-functions.all()) {
+  &.mdc-text-field--disabled {
+    @include helper-text-color_($color, $query);
+  }
+}
+@mixin helper-text-validation-color($color, $query: feature-targeting-functions.all()) {
+  &:not(.mdc-text-field--disabled) {
+    @include helper-text-validation-color_($color, $query);
+  }
+}
+@mixin helper-text-color_($color, $query: feature-targeting-functions.all()) {
+  $feat-color: feature-targeting-functions.create-target($query, color);
+  + .mdc-text-field-helper-line .mdc-text-field-helper-text {
+    @include feature-targeting-mixins.targets($feat-color) {
+      @include mixins.prop(color, $color);
+    }
+  }
+}
+@mixin helper-text-validation-color_($color, $query: feature-targeting-functions.all()) {
+  $feat-color: feature-targeting-functions.create-target($query, color);
+  &.mdc-text-field--invalid + .mdc-text-field-helper-line .mdc-text-field-helper-text--validation-msg {
+    @include feature-targeting-mixins.targets($feat-color) {
+      @include mixins.prop(color, $color);
+    }
+  }
+}

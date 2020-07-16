@@ -2,7 +2,7 @@
 @tailwind components;
 
 .rykn0wxx .md-btn {
-  @apply inline-block relative cursor-pointer min-h-18 align-middle items-center text-center rounded box-border select-none outline-none py-0 px-3 my-3 mx-4 bg-trans text-current whitespace-no-wrap uppercase font-medium text-reg no-underline overflow-hidden;
+  @apply inline-block relative cursor-pointer min-h-18 align-middle items-center text-center rounded box-border select-none outline-none py-0 px-3 my-3 mx-4 bg-trans text-current whitespace-no-wrap uppercase font-med text-reg no-underline overflow-hidden;
   transition: box-shadow .4s cubic-bezier(.25,.8,.25,1),background-color .4s cubic-bezier(.25,.8,.25,1);
   min-width: 8.8rem;
   line-height: 3.6rem;

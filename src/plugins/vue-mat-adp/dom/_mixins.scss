@@ -1,0 +1,16 @@
+@use "../feature-targeting/functions" as feature-targeting-functions;
+@use "../feature-targeting/mixins" as feature-targeting-mixins;
+@mixin transparent-border($query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include feature-targeting-mixins.targets($feat-structure) {
+    position: absolute;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border: 1px solid transparent;
+    border-radius: inherit;
+    content: "";
+  }
+}
