@@ -14,7 +14,8 @@ module.exports = {
   target: 'relaxed',
   purge: {
     mode: 'all',
-    content: ['./public/**/*.html']
+    content: ['./public/**/*.html', './src/**/*.vue'],
+    defaultExtractor: content => content.match(/[A-Za-z0-9-_:/]+/g) || []
   },
   theme: {
     extend: {

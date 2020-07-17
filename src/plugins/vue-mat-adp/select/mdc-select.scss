@@ -1,0 +1,8 @@
+@use "./helper-text/mdc-select-helper-text";
+@use "./icon/mdc-select-icon";
+@use "./mixins";
+@use "../floating-label/mdc-floating-label";
+@use "../ripple/common";
+@use "../line-ripple/mdc-line-ripple";
+@use "../notched-outline/mdc-notched-outline";
+@include mixins.core-styles;

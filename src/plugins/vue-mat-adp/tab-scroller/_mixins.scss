@@ -1,0 +1,100 @@
+@use "../animation/variables" as animation-variables;
+@use "../tab/mixins" as tab-mixins;
+@use "../feature-targeting/functions";
+@use "../feature-targeting/mixins" as feature-targeting-mixins;
+@use "./variables";
+@mixin transition(
+  $duration-ms,
+  $timing-function: animation-variables.$standard-curve-timing-function,
+  $query: functions.all()
+) {
+  $feat-animation: functions.create-target($query, animation);
+  &.mdc-tab-scroller--animating .mdc-tab-scroller__scroll-content {
+    @include feature-targeting-mixins.targets($feat-animation) {
+      transition: $duration-ms transform $timing-function;
+    }
+  }
+}
+@mixin core-styles($query: functions.all()) {
+  $feat-structure: functions.create-target($query, structure);
+  $feat-animation: functions.create-target($query, animation);
+
+  .mdc-tab-scroller {
+    @include transition(
+      $duration-ms: variables.$transition-duration,
+      $query: $query);
+    @include feature-targeting-mixins.targets($feat-structure) {
+      overflow-y: hidden;
+    }
+  }
+
+  .mdc-tab-scroller__test {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      position: absolute;
+      top: -9999px;
+      width: 100px;
+      height: 100px;
+      overflow-x: scroll;
+    }
+  }
+  .mdc-tab-scroller__scroll-area {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      -webkit-overflow-scrolling: touch;
+      display: flex;
+      overflow-x: hidden;
+    }
+  }
+  .mdc-tab-scroller__scroll-area,
+  .mdc-tab-scroller__test {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+
+  .mdc-tab-scroller__scroll-area--scroll {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      overflow-x: scroll;
+    }
+  }
+  .mdc-tab-scroller__scroll-content {
+    @include scroll-content_($query);
+  }
+  .mdc-tab-scroller--align-start .mdc-tab-scroller__scroll-content {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      justify-content: flex-start;
+    }
+  }
+  .mdc-tab-scroller--align-end .mdc-tab-scroller__scroll-content {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      justify-content: flex-end;
+    }
+  }
+  .mdc-tab-scroller--align-center .mdc-tab-scroller__scroll-content {
+    @include feature-targeting-mixins.targets($feat-structure) {
+      justify-content: center;
+    }
+  }
+  .mdc-tab-scroller--animating {
+    .mdc-tab-scroller__scroll-area {
+      @include feature-targeting-mixins.targets($feat-animation) {
+        -webkit-overflow-scrolling: auto;
+      }
+    }
+  }
+
+}
+@mixin scroll-content_($query: functions.all()) {
+  $feat-structure: functions.create-target($query, structure);
+  $feat-animation: functions.create-target($query, animation);
+  @include tab-mixins.parent-positioning($query);
+  @include feature-targeting-mixins.targets($feat-structure) {
+    display: flex;
+    flex: 1 0 auto;
+    transform: none;
+  }
+  @include feature-targeting-mixins.targets($feat-animation) {
+    will-change: transform;
+  }
+}

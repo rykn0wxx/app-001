@@ -1,0 +1,106 @@
+@use "../../feature-targeting/mixins" as feature-mixins;
+@use "../../feature-targeting/functions" as feature-functions;
+@use "../../ripple/mixins" as ripple;
+@use "@material/rtl/mixins" as rtl;
+@use "../../theme/mixins" as theme;
+@use "../../touch-target/mixins" as touch;
+@use "./variables";
+$ripple-target: '.mdc-chip-trailing-action__ripple';
+@mixin core-styles($query: feature-functions.all()) {
+  @include without-ripple($query: $query);
+  @include ripple($query: $query);
+}
+@mixin without-ripple($query: feature-functions.all()) {
+  $feat-structure: feature-functions.create-target($query, structure);
+  $feat-color: feature-functions.create-target($query, color);
+  @include touch.wrapper($query);
+  @include _touch-target-base($query);
+  .mdc-chip-trailing-action {
+    @include size(variables.$size, $query);
+    @include color(variables.$color, $query);
+    @include feature-mixins.targets($feat-structure) {
+      border: none;
+      display: inline-flex;
+      position: relative;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      padding: 0;
+      outline: none;
+      cursor: pointer;
+      -webkit-appearance: none;
+    }
+    @include feature-mixins.targets($feat-color) {
+      background: none;
+    }
+
+
+
+    .mdc-chip-trailing-action__icon {
+      @include feature-mixins.targets($feat-color) {
+        fill: currentColor;
+        color: inherit;
+      }
+    }
+  }
+}
+@mixin ripple($query: feature-functions.all()) {
+  @include ripple.common($query);
+  $feat-structure: feature-functions.create-target($query, structure);
+  .mdc-chip-trailing-action {
+    @include ripple.surface($query: $query, $ripple-target: $ripple-target);
+    @include ripple.radius-unbounded($query: $query, $ripple-target: $ripple-target);
+    @include ripple.states(variables.$ripple-color, $query: $query, $ripple-target: $ripple-target);
+    #{$ripple-target} {
+      @include feature-mixins.targets($feat-structure) {
+        position: absolute;
+
+
+        box-sizing: content-box;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+    }
+  }
+}
+@mixin color($color, $query: feature-functions.all()) {
+  $feat-color: feature-functions.create-target($query, color);
+  .mdc-chip-trailing-action {
+    @include feature-mixins.targets($feat-color) {
+      @include theme.prop(color, $color);
+    }
+  }
+}
+@mixin size($size, $query: feature-functions.all()) {
+  $feat-structure: feature-functions.create-target($query, structure);
+  .mdc-chip-trailing-action__icon {
+    @include feature-mixins.targets($feat-structure) {
+      height: $size;
+      width: $size;
+      font-size: $size;
+    }
+  }
+}
+@mixin horizontal-spacing($left, $right, $query: feature-functions.all()) {
+  $feat-structure: feature-functions.create-target($query, structure);
+  .mdc-chip-trailing-action {
+    @include feature-mixins.targets($feat-structure) {
+      @include rtl.reflexive-property(margin, $left, $right);
+    }
+  }
+}
+@mixin touch-target-width($width, $query: feature-functions.all()) {
+  $feat-structure: feature-functions.create-target($query, structure);
+  .mdc-chip-trailing-action__touch {
+    @include feature-mixins.targets($feat-structure) {
+      width: $width;
+    }
+  }
+}
+@mixin _touch-target-base($query: feature-functions.all()) {
+  @include touch-target-width(variables.$touch-target-width, $query);
+  .mdc-chip-trailing-action__touch {
+    @include touch.touch-target($set-width: true, $query: $query);
+  }
+}

@@ -1,0 +1,51 @@
+@use "../animation/variables" as animation-variables;
+@use "../density/functions" as density-functions;
+@use "../feature-targeting/functions" as feature-targeting-functions;
+@use "../feature-targeting/mixins" as feature-targeting-mixins;
+@use "../tab-scroller/mixins" as tab-scroller-mixins;
+@use "../tab/mixins" as tab-mixins;
+@use "./variables";
+@mixin core-styles($query: feature-targeting-functions.all()) {
+
+  .mdc-tab-bar {
+    @include width(100%, $query);
+  }
+  @include density(variables.$density-scale, $query: $query);
+  @include stacked-density(variables.$stacked-density-scale, $query: $query);
+
+}
+@mixin width($width, $query: feature-targeting-functions.all()) {
+  $feat-structure: feature-targeting-functions.create-target($query, structure);
+  @include feature-targeting-mixins.targets($feat-structure) {
+    width: $width;
+  }
+}
+@mixin density($density-scale, $query: feature-targeting-functions.all()) {
+  $height: density-functions.prop-value(
+    $density-config: variables.$density-config,
+    $density-scale: $density-scale,
+    $property-name: height,
+  );
+  .mdc-tab {
+    @include tab-mixins.height($height, $query: $query);
+  }
+}
+@mixin stacked-density($density-scale, $query: feature-targeting-functions.all()) {
+  $height: density-functions.prop-value(
+    $density-config: variables.$stacked-density-config,
+    $density-scale: $density-scale,
+    $property-name: height,
+  );
+  .mdc-tab--stacked {
+    @include tab-mixins.height($height, $query: $query);
+  }
+}
+@mixin tab-scroller-transition(
+  $duration-ms,
+  $timing-function: animation-variables.$standard-curve-timing-function,
+  $query: feature-targeting-functions.all()
+) {
+  .mdc-tab-scroller {
+    @include tab-scroller-mixins.transition($duration-ms, $timing-function: $timing-function, $query: $query);
+  }
+}

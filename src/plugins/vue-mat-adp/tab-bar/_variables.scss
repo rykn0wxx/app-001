@@ -1,0 +1,24 @@
+@use "../density/variables" as density-variables;
+@use "../tab/variables" as tab-variables;
+$height: tab-variables.$height !default;
+$minimum-height: 30px !default;
+$maximum-height: $height !default;
+$density-scale: density-variables.$default-scale !default;
+$density-config: (
+  height: (
+    default: $height,
+    maximum: $maximum-height,
+    minimum: $minimum-height,
+  ),
+) !default;
+$stacked-height: tab-variables.$stacked-height !default;
+$stacked-minimum-height: 56px !default;
+$stacked-maximum-height: $stacked-height !default;
+$stacked-density-scale: density-variables.$default-scale !default;
+$stacked-density-config: (
+  height: (
+    default: $stacked-height,
+    maximum: $stacked-maximum-height,
+    minimum: $stacked-minimum-height,
+  ),
+) !default;
