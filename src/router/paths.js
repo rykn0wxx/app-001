@@ -16,6 +16,12 @@ export default [
         name: 'About',
         view: 'pages/About',
         meta: { isPublic: true }
+      },
+      {
+        path: '/login',
+        name: 'Login',
+        view: 'pages/auth/Login',
+        meta: { isPublic: true }
       }
     ]
   }

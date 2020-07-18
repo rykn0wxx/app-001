@@ -26,6 +26,9 @@
           <router-link to="/about" class="toolbar-item relative md-subhead block tracking-extended text-f2 text-opacity-70 text-inherit font-inherit m-inh mx-4 px-3 hover:text-f1 hover:text-opacity-90">
             About
           </router-link>
+          <router-link to="/login" class="toolbar-item relative md-subhead block tracking-extended text-f2 text-opacity-70 text-inherit font-inherit m-inh mx-4 px-3 hover:text-f1 hover:text-opacity-90">
+            Login
+          </router-link>
           <div :style="{ transform: inkStyle }" class="toolbar-item-ink absolute bottom-0 left-0 w-full h-1"></div>
         </div>
       <!-- </transition> -->
