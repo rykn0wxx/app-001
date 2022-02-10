@@ -38,7 +38,7 @@
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.2.2",
     "fibers": "^5.0.0",
-    "node-sass": "^4.9.2",
+    "node-sass": "^7.0.0",
     "raf": "^3.4.1",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
